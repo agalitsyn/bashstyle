@@ -1,10 +1,23 @@
-# progrium/bashstyle
+# Bash style
 
-Bash is the JavaScript of systems programming. Although in some cases it's better to use a systems language like C or Go, Bash is an ideal systems language for smaller POSIX-oriented or command line tasks. Here's three quick reasons why:
+Fork of https://github.com/progrium/bashstyle with my additions.
+I found that this doc really fits to my own thoughts, so I just picked it :)
+
+# Why bash?
+
+Bash is the JavaScript of systems programming. Although in some cases it's better to use a systems language like C or Go, Bash is an ideal systems language for smaller POSIX-oriented or command line tasks. Here's quick reasons why:
 
  * It's everywhere. Like JavaScript for the web, Bash is already there ready for systems programming.
  * It's neutral. Unlike Ruby, Python, JavaScript, or PHP, Bash offends equally across all communities. ;)
  * It's made to be glue. Write complex parts in C or Go (or whatever!), and glue them together with Bash.
+ * It's has minimal footprint
+ * It can be easily debugged with `set -x`
+ * It's can be read easily, not like Python of course, but close to it if you used functions and logic splitting.
+ * It's pretty strict with `set -euo pipefail`
+ * Scoping is like in any "real" programming language, it has immutable vars using keyword `readonly`, local vars using keywork `local` and of course global vars.
+ * You can easily create short programms with no dependencies, just copy & run.
+ Python is cool, but these venvs and `pip install -r requirements.txt` are not fun for average Linux / OSX users 
+ or for containers on top of busybox (sh only) / alpine (you can install bash). As alternative you can write in Golang, but it requires to build 2 different binaries for Linux and OSX.
 
 This document is how I write Bash and how I'd like collaborators to write Bash with me in my open source projects. It's based on a lot of experience and time collecting best practices. Most of them come from these [two](http://wiki.bash-hackers.org/scripting/obsolete) [articles](http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/), but here integrated, slightly modified, and focusing on the most bang for buck items. Plus some new stuff!
 
@@ -12,6 +25,9 @@ Keep in mind this is not for general shell scripting, these are rules specifical
 
 ## Big Rules
 
+ * Install `shellcheck` and use it with editor
+ * Use strict mode with `set -euo pipefail`
+ * Read http://mywiki.wooledge.org/BashPitfalls and http://mywiki.wooledge.org/BashFAQ
  * Always double quote variables, including subshells. No naked `$` signs
    * This rule gets you pretty far. Read http://mywiki.wooledge.org/Quotes for details
  * All code goes in a function. Even if it's one function, `main`. 
@@ -67,7 +83,6 @@ If you know what you're doing, you can bend or break some of these rules, but ge
  * http://tldp.org/LDP/abs/html/
  * Tips for interactive Bash: http://samrowe.com/wordpress/advancing-in-the-bash-shell/
  * For reference, [Google's Bash styleguide](http://google-styleguide.googlecode.com/svn/trunk/shell.xml)
- * For linting, [shellcheck](https://github.com/koalaman/shellcheck)
 
 ## Examples
 
@@ -86,7 +101,7 @@ Defining functions with a final variadic argument
 ```bash
 variadic_func() {
 	local arg1="$1"; shift
-	local arg2="$1"; shift
+	local arg2="$2"; shift
 	local rest="$@"
 
 	# ...
